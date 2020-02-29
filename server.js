@@ -26,7 +26,7 @@ const database = { // temporary "database"..... just an array of objects
 }
 
 app.get('/', (req, res) => {
-  res.send('this is working');
+  res.send(database.users);
 })
 
 app.post('/signin', (req,res) => {
