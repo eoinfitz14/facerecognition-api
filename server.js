@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require('knex')
 
-const postgres = knex ({ // taken from knex user documentation for node.js
+const db = knex ({ // taken from knex user documentation for node.js
   client: 'pg', // dependency we downloaded
   connection: {
     host : '127.0.0.1', // reminder: 127.0.0.1 is localhoss's IP
@@ -15,8 +15,9 @@ const postgres = knex ({ // taken from knex user documentation for node.js
 });
 
 /*
-  * KNEX SYNTAX EXAMPLE
-  * postgres.select('*').from('users')
+  * example of knex syntax:
+  * db.select('*').from('users') // returns a promise
+  * use .then(data => { etc etc }) to access the data
 */
 
 const app = express(); // create the app
@@ -69,32 +70,34 @@ app.post('/signin', (req,res) => {
 app.post('/register', (req,res) => {
   const { email, name } = req.body; // destructuring the request and assigning the values of it to constant variables
   let lastUserIndex = database.users.length-1;
-  database.users.push({ // pushing a new user object into the user array! NB v useful
-    id: '125', // need to make dynamic
-      name: name,
+  db('users')
+    .returning('*') // allows us to return what we have inserted
+    .insert({
       email: email,
-      entries: 0,
+      name: name,
       joined: new Date()
-  })
-  /*
-  Note: I think the push isn't updating the 'DB' quickly enough so it prints out the 2nd last object rather than the last
-  */
-  res.json(database.users[lastUserIndex]);
+    })
+    .then(user => { // provided the insert was a success return what was inserted.. i.e a promise was used (.then() is a callback to promises)
+      res.json(user[0]);
+    })
+    .catch (err => res.status(400).json('unable to register')) //NB don't return the err as it will give the client too much info on the DB
+
 })
 
 // V useful function for iterating through an array of objects
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params; // by usering :id syntax for the url endpoint we can access id in the params
-  let found = false;
-  database.users.forEach(user => {
-    if(user.id === id){
-      found = true;
-      return res.json(user);
+  db.select('*').from('users').where({
+    id: id
+  })
+  .then(user => {
+    if(user.length) { // if there's 1 or more users
+      res.json(user[0]);
+    } else{
+      res.status(400).json('Not found');
     }
   })
-  if(!found){
-    res.status(400).json('not found');
-  }
+  .catch(err => res.status(400).json('Error getting user'))
 })
 
 //every time an image is sent, update the number of entries 
