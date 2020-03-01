@@ -2,6 +2,22 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs'); 
 const cors = require('cors');
+const knex = require('knex')
+
+const postgres = knex ({ // taken from knex user documentation for node.js
+  client: 'pg', // dependency we downloaded
+  connection: {
+    host : '127.0.0.1', // reminder: 127.0.0.1 is localhoss's IP
+    user : 'Eoin', 
+    password : '',
+    database : 'facerecognition' //db name
+  }
+});
+
+/*
+  * KNEX SYNTAX EXAMPLE
+  * postgres.select('*').from('users')
+*/
 
 const app = express(); // create the app
 
