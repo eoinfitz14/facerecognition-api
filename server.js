@@ -68,17 +68,30 @@ app.post('/signin', (req,res) => {
 })
 
 app.post('/register', (req,res) => {
-  const { email, name } = req.body; // destructuring the request and assigning the values of it to constant variables
-  let lastUserIndex = database.users.length-1;
-  db('users')
-    .returning('*') // allows us to return what we have inserted
-    .insert({
-      email: email,
-      name: name,
-      joined: new Date()
-    })
-    .then(user => { // provided the insert was a success return what was inserted.. i.e a promise was used (.then() is a callback to promises)
-      res.json(user[0]);
+  const { email, name, password } = req.body; // destructuring the request and assigning the values of it to constant variables
+  const hash = bcrypt.hashSync(password); // taken from bcyrpt documentation
+  //NB!!! Transaction is needed so that we can update the user and login table at the same time
+    db.transaction(trx => { //can find in knex docs ... trx instead of db 
+      trx.insert({
+        hash: hash,
+        email: email
+      })
+      .into('login')
+      .returning('email')
+      .then(loginEmail => {
+        return trx('users')
+        .returning('*') // allows us to return what we have inserted
+        .insert({
+          email: loginEmail[0],
+          name: name,
+          joined: new Date()
+        })
+        .then(user => { // provided the insert was a success return what was inserted.. i.e a promise was used (.then() is a callback to promises)
+          res.json(user[0]);
+        })
+      })
+      .then(trx.commit)
+      .catch(trx.rollback)
     })
     .catch (err => res.status(400).json('unable to register')) //NB don't return the err as it will give the client too much info on the DB
 
@@ -104,7 +117,7 @@ app.get('/profile/:id', (req, res) => {
 app.put('/image', (req,res) => {
   const { id } = req.body; 
   db('users').where('id', '=', id)
-  .increment('entries', 1)
+  .increment('entries', 1) // form of "update"
   .returning('entries')
   .then(entries => {
     res.json(entries[0])
