@@ -1,6 +1,9 @@
 
 const handleRegister = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body; // destructuring the request and assigning the values of it to constant variables
+  if( !email || !name || !password ){ // if any of these are empty
+    return res.status(400).json('invalid form submission');
+  }
   const hash = bcrypt.hashSync(password); // taken from bcyrpt documentation
   //NB!!! Transaction is needed so that we can update the user and login table at the same time
     db.transaction(trx => { //can find in knex docs ... trx instead of db 
