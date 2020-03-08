@@ -35,6 +35,7 @@ app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) 
 app.get('/profile/:id', (req, res) => { profile.handleProdileGet(req, res, db) })
 app.put('/image', (req, res) => { image.handleImage(req, res, db)})
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
 
 
 app.listen(3000, () => { // listen on port 3000 and after listen happens run the function i.e the second parameter
