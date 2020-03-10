@@ -11,11 +11,9 @@ const image = require('./controllers/image');
 
 const db = knex ({ // taken from knex user documentation for node.js
   client: 'pg', // dependency we downloaded
-  connection: {
-    host : '127.0.0.1', // reminder: 127.0.0.1 is localhost's IP
-    user : 'Eoin', 
-    password : '',
-    database : 'facerecognition' //db name
+  connection: { 
+    connectionString : process.env.DATABASE_URL, // taken from heroku docs
+    ssl : true 
   }
 });
 
