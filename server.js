@@ -25,12 +25,11 @@ const app = express(); // create the app
 app.use(bodyParser.json());
 app.use(cors()); // security middleware. Google would not let us access the api through the front end without it
 
-app.get('/', (req, res) => {
-  res.send(database.users);
-})
+
 
 // Note: the request and response from the post operation are passed to the controller as well as the db and bcrypt dependencies (injection)
 // as these dependencies are passed through here, we don't need to 'require' them at the top of signin.js
+app.get('/', (req, res) => { res.send('It is working!'); })
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) 
 app.get('/profile/:id', (req, res) => { profile.handleProdileGet(req, res, db) })
