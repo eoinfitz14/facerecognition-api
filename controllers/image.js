@@ -7,7 +7,7 @@ require('dotenv').config();
  
 // imported Clarifai from CLarifai.com (machine learning API)
 const app = new Clarifai.App({
-  apiKey: "80f7447478554e79ab91887344655dc0"
+  apiKey: process.env.API_CLARIFAI
 });
 
 const handleApiCall = (req, res) => {
