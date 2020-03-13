@@ -13,7 +13,7 @@ const db = knex ({ // taken from knex user documentation for node.js
   client: 'pg', // dependency we downloaded
   connection: { 
     connectionString : process.env.DATABASE_URL, // taken from heroku docs
-    ssl : true 
+    ssl : true  
   }
 });
 
