@@ -5,15 +5,16 @@ const handleSignin = (req, res, db, bcrypt) => {
     return res.status(400).json('invalid form submission');
   }
 
-  db.select('email', 'hash').from('login')
+  db.select('email', 'hash').from('login') // select the email and hash of the password (remember, it's encrypted)
     .where('email', '=', email)
     .then(data => {
+      // get bcrypt to check if the password given in the response matches the hash in the DB
       const isValid = bcrypt.compareSync(password, data[0].hash); // campareSync returns a boolean value
       if(isValid){
         return db.select('*').from('users')
           .where('email', '=', email)
           .then(user => {
-            res.json(user[0]);
+            res.json(user[0]); //return the whole user entry
           })
           .catch(err => res.status(400).json('unable to get user'))
       } else{

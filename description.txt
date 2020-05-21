@@ -1,0 +1,18 @@
+server.js:
+- handles endpoints
+
+signin.js:
+- send request with email and password
+- retrieve the email and corresponding hash from the db
+- use bcrypt to confirm that the password corresponds to the hash and if it does, return the user from the table
+
+register.js:
+- need to go through the transactions again
+
+profile.js:
+- based on an ID sent in the URL, return a user entry from the DB.
+
+image.js:
+- two functions
+- first handles call to clarifai's api
+- other updates number of entries a user has had

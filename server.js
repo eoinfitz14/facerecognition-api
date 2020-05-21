@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser'); // Bodyparser is used so that we can use req.body
 const bcrypt = require('bcrypt-nodejs'); 
 const cors = require('cors');
 const knex = require('knex')
@@ -30,7 +30,7 @@ app.use(cors()); // security middleware. Google would not let us access the api 
 app.get('/', (req, res) => { res.send('It is working!'); })
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) 
-app.get('/profile/:id', (req, res) => { profile.handleProdileGet(req, res, db) })
+app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
 app.put('/image', (req, res) => { image.handleImage(req, res, db)})
 app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
 
