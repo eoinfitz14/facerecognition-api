@@ -15,4 +15,4 @@ profile.js:
 image.js:
 - two functions
 - first handles call to clarifai's api
-- other updates number of entries a user has had
+- other updates number of entries a user has had 
